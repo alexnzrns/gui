@@ -1,43 +1,78 @@
-from tkinter import *   #importiert alles vom Framework tkinter, das zum erstellen einer GUI(graphical-user-interface) gemacht ist
+from tkinter import *
 from tkinter import messagebox
 
-def read_eingabe_feld():    #Funktion zum einlesen vom Eingabefeld in eine Variable
-    global eingabe 
-    eingabe = eingabe_feld.get() #damit wird die get Funktion im Eingabefeld aufgerufen und holt sich den eingegebenen Input und speichert es in der Variable eingabe
-    print(eingabe)
-    return eingabe
 
-def berechnung():
-    eingabe = eingabe_feld.get() #damit wird die get Funktion im Eingabefeld aufgerufen und holt sich den eingegebenen Input und speichert es in der Variable eingabe
-    eingabe = int(eingabe) #macht aus der eingabe einen Integer - wird benötigt für die Berechnung
-    #print(type(eingabe)) #testet ob die Eingabe wirklich ein Integer ist
+def login():
+    uname = uname_input.get() #holt sich Daten und speichert in var 
+    password = password_input.get()
+
+    if(uname == "1" and password == "1"):
+        messagebox.showinfo("", "Login successfull")
+        for widget in window.winfo_children():
+            widget.destroy() #zerstört alles und macht Fenster im Prinzip clean
+            new_window() #öffnet Funktion Schaltjahr berechnen die wieder Widgets hat
+            
+
+    elif(uname == "" and password == ""):
+        messagebox.showinfo("", "Keine leeren Felder erlaubt!")
+    else:
+        messagebox.showinfo("", "Falscher Benutzername oder Passwort")
+
+
+def schaltjahr_berechnung():
+    eingabe = eingabe_feld.get()
+    eingabe = int(eingabe)
+
+    schaltjahr_label = Label(window, text = 'Es ist ein Schaltjahr!')
 
     if(eingabe % 4 != 0):
-        #print('Es ist kein Schaltjahr')
+        schaltjahr_label.configure(text='Es ist kein Schaltjahr!')
+        schaltjahr_label.place(x=120, y=100)
 
     if(eingabe % 4 == 0 and eingabe % 100 != 0):
-        #print('Es ist ein Schaltjahr')
+        #hier fehlt der Lösch-Befehl!
+        schaltjahr_label.configure(text='Es ist ein Schaltjahr!')
+        schaltjahr_label.place(x=120, y=100)
 
     if(eingabe % 4 == 0 and eingabe % 100 == 0 and eingabe % 400 != 0):
-        #print('Es ist kein Schaltjahr')
+        schaltjahr_label.configure(text='Es ist kein Schaltjahr!')
+        schaltjahr_label.place(x=120, y=100)
 
     if(eingabe % 4 == 0 and eingabe % 100 == 0 and eingabe % 400 == 0):
-        #print('Es ist ein Schaltjahr')
+        schaltjahr_label.configure(text='Es ist ein Schaltjahr!')
+        schaltjahr_label.place(x=120, y=100)
 
 
-window = Tk() #erstellt das Fenster durch tkinter
-window.title('Schaltjahrberechnung') #gibt dem Fenster den Titel 'Schaltjahrberechnung'
+def new_window():
+    global eingabe_feld 
+    eingabe_feld = Entry(window) 
+    berechnen_button = Button(window, text = 'Berechnen', command=schaltjahr_berechnung) 
+    schliessen_button = Button(window, text = 'Programm beenden', command=window.destroy)
+    aufforderung_text = Label(window, text = 'Geben Sie bitte das Jahr zum Berechnen ein:')
+    
+    aufforderung_text.place(x=55, y=10)
+    eingabe_feld.place(x=100, y=40) #damit wird das erstellte Objekt eingabe_feld auf dem Fenster window abgelegt
+    berechnen_button.place(x=145, y =70) #damit wird das erstellte Objekt berechnen_button auf dem Fenster window abgelegt
+    schliessen_button.place(x=120, y=170)
 
-eingabe_feld = Entry(window) #erzeugt ein im tkinter Framework enthaltenes Eingabefeld innerhalb des Fensters window
-berechnen_button = Button(window, text = 'Berechnen' , command=berechnung) #erzeug ein im tkinter Framework enthaltenen Button innerhalb des Fensters window mit dem Text 'Berechnen' darauf und beim klicken wird die Funktion ausgelöst
-schliessen_button = Button(window, text = 'Programm beenden', command=window.destroy)
-aufforderung_text = Label(window, text = 'Geben Sie bitte das Jahr zum Berechnen ein:') #c-p oben
 
+window = Tk()
+window.title('GUI')
 
-aufforderung_text.pack()
-eingabe_feld.pack() #damit wird das erstellte Objekt eingabe_feld auf dem Fenster window abgelegt
-berechnen_button.pack() #damit wird das erstellte Objekt berechnen_button auf dem Fenster window abgelegt
-schliessen_button.pack()
+Label (window, text = 'Benutzername:').place(x=40, y=30)
+Label (window, text = 'Passwort:').place(x=40, y=60)
+
+uname_input = Entry(window)
+uname_input.place(x=150, y=30)
+
+password_input = Entry(window)
+password_input.place(x=150, y=60)
+password_input.config(show="*") #damit er die eingegebenen Daten nicht anzeigt
+
+login_button = Button (window, text = 'Login', command=login)
+login_button.place(x=210, y=100)
 
 window.geometry("400x200")
-window.mainloop() #damit wird das tkinter Fenster window gestartet 
+window.minsize(400, 200)
+window.maxsize(400, 200)
+window.mainloop()
